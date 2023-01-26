@@ -20,6 +20,6 @@ public interface EmployeeService {
 //	public LeaveDetails applyLeave(long empId,int type,int noOfDays);
 	
 	public String checkLeaveBalance(long empId) throws EmployeeNotFoundException;
-	public LeaveDetails applyLeave(long eid, String type, int days);
-
+//	public LeaveDetails applyLeave(long eid, String type, int days);
+	public LeaveDetails applyLeave(long eid, String type, int days, byte[] image);
 }

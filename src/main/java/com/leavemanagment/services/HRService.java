@@ -12,6 +12,7 @@ public interface HRService {
 	public LeaveDetails updateLeaveStatus(long employeeid,long leaveid, String status) throws LeaveNotFoundException;
 	
 	public LeaveDetails validateMedicalReport(long leaveId) throws LeaveNotFoundException;
+	public List<LeaveDetails> findStatusByEmployeeId(long employeeId);
 	
 }
 

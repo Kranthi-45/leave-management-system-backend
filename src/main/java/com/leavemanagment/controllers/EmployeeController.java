@@ -1,4 +1,5 @@
 package com.leavemanagment.controllers;
+import java.io.IOException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.multipart.MultipartFile;
 import com.leavemanagment.entities.EmployeeDetails;
 import com.leavemanagment.entities.LeaveDetails;
 import com.leavemanagment.enumm.Employee;
@@ -27,6 +28,7 @@ import com.leavemanagment.exception.DuplicateEmployeeException;
 import com.leavemanagment.exception.EmployeeNotFoundException;
 import com.leavemanagment.services.EmployeeDetailsService;
 import com.leavemanagment.services.EmployeeService;
+import com.leavemanagment.services.HRService;
 
 
 
@@ -36,6 +38,10 @@ import com.leavemanagment.services.EmployeeService;
 public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;
+	
+	@Autowired
+	private HRService hrService;
+	
 	@PostMapping("/save-emp")
 	public ResponseEntity<EmployeeDetails> createNewEmployee(@Valid @RequestBody EmployeeDetails employee) throws DuplicateEmployeeException
 	{
@@ -62,17 +68,31 @@ public class EmployeeController {
 		return employeeService.getAllEmployees();
 	}
 	
-	@PostMapping("/apply-leave")
-	public ResponseEntity<LeaveDetails> applyForLeave(@Valid @RequestParam("empid") long eid,@Valid @RequestParam("type") String type,@Valid@RequestParam("days") int days )
+//	@PostMapping("/apply-leave")
+//	public ResponseEntity<LeaveDetails> applyForLeave(@Valid @RequestParam("empid") long eid,@Valid @RequestParam("type") String type,@Valid@RequestParam("days") int days )
+//	{
+//		System.out.println("type: " + type);
+//		return new ResponseEntity<LeaveDetails>(employeeService.applyLeave(eid, type, days), HttpStatus.CREATED);
+//	}
+	
+	@PostMapping("/apply-leave")                                                    
+	public ResponseEntity<LeaveDetails> applyForLeave(@Valid @RequestParam("empId") Long eid,@Valid @RequestParam("type") String type, @Valid @RequestParam("days") int days,@RequestParam("file") MultipartFile file) throws IOException
 	{
-		System.out.println("type: " + type);
-		return new ResponseEntity<LeaveDetails>(employeeService.applyLeave(eid, type, days), HttpStatus.CREATED);
+		byte[] files = file.getBytes();
+		return new ResponseEntity<LeaveDetails>(employeeService.applyLeave(eid, type, days, files), HttpStatus.CREATED);
 	}
+	
 	
 	@GetMapping("/leave-balance/{eid}")
 	public ResponseEntity<String> checkLeaveBalance(@PathVariable("eid") long eid) throws EmployeeNotFoundException
 	{	
 		return new ResponseEntity<String>(employeeService.checkLeaveBalance(eid),HttpStatus.OK);
+	}
+	
+	@GetMapping("/empl-status/{eid}")
+	public List<LeaveDetails> findStatusByEmployeeId(@PathVariable("eid") long eid) throws EmployeeNotFoundException
+	{	
+		return hrService.findStatusByEmployeeId(eid);
 	}
 	
 }

@@ -220,6 +220,11 @@ public class HRServiceImpl implements HRService{
 		  }
 		
 	}
+	 
+	 @Override
+	 public List<LeaveDetails> findStatusByEmployeeId(long employeeId) {
+	        return leaveRepo.findStatusByEmployeeId(employeeId);
+	    }
 		
 	}
 

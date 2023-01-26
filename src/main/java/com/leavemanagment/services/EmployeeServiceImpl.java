@@ -72,12 +72,14 @@ private LeaveDetailsRepo leaveRepository;
 	}
 
 	@Override
-	public LeaveDetails applyLeave(long empId, String type, int noOfDays) {
+	public LeaveDetails applyLeave(long empId, String type, int noOfDays , byte[] files) {
 		
 		LeaveDetails leaveDeatils = new LeaveDetails();
 		leaveDeatils.setEmployeeId(empId);
 		leaveDeatils.setApproverId(0);
 		leaveDeatils.setNoOfDays(noOfDays);
+		leaveDeatils.setFiles(files);
+
 		System.out.println("EMPLOYEE SERVICE IMPL type: " + type);
 		 if(type.equals("AUNNAL_LEAVE"))
 		 {
@@ -98,9 +100,6 @@ private LeaveDetailsRepo leaveRepository;
 	@Override
 	public String checkLeaveBalance(long empId)  throws EmployeeNotFoundException{
 		
-		
-		
-		
 		 if(employeeRepository.existsById(empId))
 		 {
 			 
@@ -115,8 +114,7 @@ private LeaveDetailsRepo leaveRepository;
 			     }
 			     else
 			     leavebalance+=" Anual Leaves:"+emp.getAnnualLeave()+" Meternity Leaves: "+emp.getMaternityLeave();
-			     
-			     
+			  			     
 			     return leavebalance;
 		 }
 		 else {
